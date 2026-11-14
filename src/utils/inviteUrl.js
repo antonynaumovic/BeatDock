@@ -1,4 +1,5 @@
 const { PermissionsBitField } = require('discord.js');
+const { SET_VOICE_CHANNEL_STATUS } = require('./voiceChannelStatus');
 
 const REQUIRED_PERMISSIONS = [
     PermissionsBitField.Flags.SendMessages,
@@ -7,6 +8,7 @@ const REQUIRED_PERMISSIONS = [
     PermissionsBitField.Flags.Speak,
     PermissionsBitField.Flags.ManageMessages,
     PermissionsBitField.Flags.ReadMessageHistory,
+    SET_VOICE_CHANNEL_STATUS,
 ];
 
 function generateInviteUrl(clientId) {

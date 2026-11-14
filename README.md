@@ -273,6 +273,7 @@ All configuration is done through the `.env` file. Only `TOKEN` is required.
 | `AUTOPLAY_DEFAULT` | `false` | Enable autoplay by default when music starts |
 | `ALLOWED_ROLES` | - | Comma-separated role IDs to restrict access |
 | `DEFAULT_SEARCH_PLATFORM` | `ytmsearch` | Default search platform for user queries | 
+| `VOICE_CHANNEL_STATUS` | `true` | Show the current track as the voice channel status (needs the "Set Voice Channel Status" permission) |
 | `LAVALINK_PASSWORD` | `youshallnotpass` | Lavalink server password |
 | `PUBLIC_NODE_HOST_ALLOWLIST` | - | Optional comma-separated host or `*.domain` allowlist for public Lavalink fallback |
 | `QUEUE_EMPTY_DESTROY_MS` | `30000` | Disconnect after queue empties (ms) |

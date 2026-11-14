@@ -24,6 +24,7 @@ const {
     clearGuild: clearFailureState,
 } = require('./utils/playbackFailureTracker');
 const { verifyNodePlugins } = require('./utils/nodePluginCheck');
+const { setVoiceStatus, clearVoiceStatus } = require('./utils/voiceChannelStatus');
 const loadCommands = require('./handlers/commandHandler');
 const registerEvents = require('./handlers/eventHandler');
 const logger = require('./utils/logger');
@@ -241,6 +242,7 @@ function registerLavalinkEvents(client) {
             startedAt: Date.now()
         });
         client.updatePresence();
+        setVoiceStatus(client, player, track).catch(() => {});
 
         logger.track(`Now playing: ${track.info?.title} — ${track.info?.author}`);
     });
@@ -264,6 +266,7 @@ function registerLavalinkEvents(client) {
         const guildId = player.guildId;
 
         clearQueueEndTimeout(guildId);
+        clearVoiceStatus(client, guildId).catch(() => {});
 
         // The breaker already explains a systemic outage, so a per-track notice on top of it
         // would just be noise.
@@ -310,6 +313,7 @@ function registerLavalinkEvents(client) {
     // cleanupGuildPlayer, so this is the only place that catches every teardown path.
     client.lavalink.on("playerDestroy", (player) => {
         clearFailureState(player.guildId);
+        clearVoiceStatus(client, player.guildId).catch(() => {});
     });
 }
 
