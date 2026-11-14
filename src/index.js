@@ -24,7 +24,7 @@ const {
     clearGuild: clearFailureState,
 } = require('./utils/playbackFailureTracker');
 const { verifyNodePlugins } = require('./utils/nodePluginCheck');
-const { setVoiceStatus, clearVoiceStatus } = require('./utils/voiceChannelStatus');
+const { setVoiceStatus, clearVoiceStatus, clearVoiceStatusBeforeLeave } = require('./utils/voiceChannelStatus');
 const loadCommands = require('./handlers/commandHandler');
 const registerEvents = require('./handlers/eventHandler');
 const logger = require('./utils/logger');
@@ -142,7 +142,9 @@ async function setupLavalink(client) {
 
     client.lavalink = new LavalinkManager({
         nodes,
-        sendToShard: (guildId, payload) => {
+        sendToShard: async (guildId, payload) => {
+            // Clear the voice channel status while we are still connected, before leaving.
+            if (payload?.op === 4 && !payload.d?.channel_id) await clearVoiceStatusBeforeLeave(client, guildId);
             const guild = client.guilds.cache.get(guildId);
             if (guild) guild.shard.send(payload);
         },

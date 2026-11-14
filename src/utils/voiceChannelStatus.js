@@ -92,9 +92,20 @@ async function clearVoiceStatus(client, guildId) {
     await putStatus(client, guildId, channelId, '');
 }
 
+// Leaving voice must never hang on Discord's API, so the clear is capped.
+const LEAVE_CLEAR_TIMEOUT_MS = 2000;
+
+async function clearVoiceStatusBeforeLeave(client, guildId) {
+    await Promise.race([
+        clearVoiceStatus(client, guildId).catch(() => {}),
+        new Promise((resolve) => setTimeout(resolve, LEAVE_CLEAR_TIMEOUT_MS).unref()),
+    ]);
+}
+
 module.exports = {
     SET_VOICE_CHANNEL_STATUS,
     formatStatus,
     setVoiceStatus,
     clearVoiceStatus,
+    clearVoiceStatusBeforeLeave,
 };
